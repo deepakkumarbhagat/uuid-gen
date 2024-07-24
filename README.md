@@ -1,2 +1,2 @@
 # uuid-gen
-uuid generator for a distributed system
+golang based uuid generator for a distributed system
