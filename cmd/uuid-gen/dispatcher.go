@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 )
 
 type WorkerID int
@@ -15,10 +14,8 @@ type Dispatcher struct {
 	WorkerCh   []chan Job
 }
 
-func NewDispatcher(jobCh chan Job, doneCh chan struct{}) *Dispatcher {
-	workers, _ := strconv.Atoi(maxWorkers)
+func NewDispatcher(jobCh chan Job, doneCh chan struct{}, workers int) *Dispatcher {
 	d := &Dispatcher{
-		//buffer channel to read the jobs from
 		jobCh:      jobCh,
 		WorkerPool: make(chan WorkerID, workers),
 		doneCh:     doneCh,
@@ -33,9 +30,9 @@ func NewDispatcher(jobCh chan Job, doneCh chan struct{}) *Dispatcher {
 }
 
 func (d *Dispatcher) Start() {
+	fmt.Println("Starting dispatcher")
 	go func() {
 		for {
-			fmt.Println("Starting dispatcher")
 			select {
 			case <-d.doneCh:
 				for _, wCh := range d.WorkerCh {

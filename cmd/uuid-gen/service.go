@@ -1,11 +1,15 @@
 package main
 
 import (
-	"fmt"
 	"strconv"
 
+	"github.com/deepakkumarbhagat/uuidgen"
 	"github.com/gin-gonic/gin"
 )
+
+type Job struct {
+	Ctx *gin.Context
+}
 
 type UUIDService struct {
 	Disp    *Dispatcher
@@ -13,18 +17,18 @@ type UUIDService struct {
 	Workers []*Worker
 }
 
-func NewUUIDService() *UUIDService {
+func NewUUIDService(metaData uuidgen.MetaData, maxJobs, maxWorkers string) *UUIDService {
 	jobsCapacity, _ := strconv.Atoi(maxJobs)
 	workers, _ := strconv.Atoi(maxWorkers)
 
 	jobChannel := make(chan Job, jobsCapacity)
 	srv := &UUIDService{
 		JobCh: jobChannel,
-		Disp:  NewDispatcher(jobChannel, make(chan struct{})),
+		Disp:  NewDispatcher(jobChannel, make(chan struct{}), workers),
 	}
 
 	for wid := 0; wid < workers; wid++ {
-		w := NewWorker(srv.Disp.WorkerCh[wid], WorkerID(wid), srv.Disp.WorkerPool)
+		w := NewWorker(srv.Disp.WorkerCh[wid], WorkerID(wid), srv.Disp.WorkerPool, metaData)
 		srv.Workers = append(srv.Workers, w)
 	}
 
@@ -42,11 +46,9 @@ func (srv *UUIDService) Start() {
 }
 
 func (srv *UUIDService) Stop() {
-	//stop dispatcher
 	srv.Disp.Stop()
 }
 
 func (srv *UUIDService) GetUUID(c *gin.Context) {
-	fmt.Println("Inside GetUUID")
 	srv.JobCh <- Job{Ctx: c}
 }
