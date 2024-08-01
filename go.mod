@@ -1,4 +1,4 @@
-module github.com/deepakkumarbhagat/uuid-gen
+module github.com/deepakkumarbhagat/uuidgen
 
 go 1.21.3
 
