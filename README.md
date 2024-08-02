@@ -15,11 +15,13 @@ The server acheives generating capacity of 1000 uuids/milisecs by implementing f
 
 ![image](https://github.com/user-attachments/assets/90db21da-bf3f-4e7e-8962-68b9a6e7e10c)
 
-
 **Testing**
 
 Tool to send rest request to the server , it's is advisable to try simulating burst of request to the server
 as verify if the server absorbs the shock correctly.
+
+![image](https://github.com/user-attachments/assets/d7c029eb-498f-4ca5-b46a-1473aef34495)
+
 
 **CLI**
 CLI support TBD
